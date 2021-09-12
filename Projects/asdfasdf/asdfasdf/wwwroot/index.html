@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Product CRUD</title>
+    <link rel="stylesheet" type="text/css" href="css/site.css">
+    <style>
+        body {
+            background-color: lightblue;
+        }
+
+        input[type='submit'], button, [aria-label] {
+            cursor: pointer;
+        }
+
+        #editForm {
+            display: none;
+            color: red;
+        }
+
+        table {
+            font-family: Arial, sans-serif;
+            border: 1px solid;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #f8f8f8;
+            padding: 5px;
+        }
+
+        td {
+            border: 1px solid;
+            padding: 5px;
+        }
+
+        #grid-container {
+            display: grid;
+            grid-gap: 50px;
+            font-size: 20px !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>Product CRUD</h1>
+    <div id="grid-container">
+        <div class="grid-item">
+
+        </div>
+    </div>
+
+
+
+
+
+
+    <h3>Add</h3>
+    <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
+        <input type="text" id="add-name" placeholder="New product">
+        <input type="submit" value="Add">
+    </form>
+
+    <div id="editForm">
+        <h3>Edit</h3>
+        <form action="javascript:void(0);" onsubmit="updateItem()">
+            <input type="hidden" id="edit-id">
+            <input type="checkbox" id="edit-isComplete">
+            <input type="text" id="edit-name">
+            <input type="submit" value="Save">
+            <a onclick="closeInput()" aria-label="Close">&#10006;</a>
+        </form>
+    </div>
+
+    <p id="counter"></p>
+
+    <table>
+        <tr>
+            <th>Is Complete?</th>
+            <th>Name</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tbody id="products"></tbody>
+    </table>
+
+    <script src="js/site.js" asp-append-version="true"></script>
+    <script type="text/javascript">getItems();</script>
+</body>
+</html>
