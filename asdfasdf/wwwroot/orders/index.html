@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Orders CRUD</title>
+    <style>
+        *, body {
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        body {
+            background-color: lightblue;
+            width: 100%;
+            min-height: 100%;
+        }
+
+        #product-link {
+            text-align: right;
+        }
+
+        #order-info-container {
+            margin: 20px;
+        }
+
+        #order-info-inner {
+            width: 50%;
+            margin: 0 auto;
+            border: 3px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Orders CRUD</h1>
+    <div id="product-link"><a href="../">Products here</a></div>
+    <form action="../api/orderitems/searchorders?orderId=">
+        <label for="order-search">Select an order</label>
+        <select name="orderId" id="orders-search">
+            <option value="test">test</option>
+        </select>
+        <button type="button" id="button-getOrder">Submit</button>
+        <!--<button type="button" onclick="getOrder">Submit</button>-->
+    </form>
+    <div id="order-info-container"></div>
+    <div id="order-items-table-container">
+        <div id="order-items-table-inner"></div>
+    </div>
+    <script src="../js/orders.js" asp-append-version="true"></script>
+</body>
+</html>

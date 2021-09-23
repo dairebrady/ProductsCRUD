@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Product CRUD</title>
+    <link rel="stylesheet" type="text/css" href="css/site.css">
+    <style>
+        *, body {
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        body {
+            background-color: lightblue;
+            width: 100%;
+            min-height: 100%;
+        }
+
+        input[type='submit'], button, [aria-label] {
+            cursor: pointer;
+        }
+
+        img {
+            height: 50%;
+            width: 100%;
+        }
+
+        #editForm {
+            display: none;
+            color: red;
+        }
+
+        table {
+            font-family: Arial, sans-serif;
+            border: 1px solid;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #f8f8f8;
+            padding: 5px;
+        }
+
+        td {
+            border: 1px solid;
+            padding: 5px;
+        }
+
+        #order-link {
+            text-align: right;
+        }
+
+        #grid-container {
+            display: grid;
+            grid-gap: 5%;
+            font-size: 20px !important;
+            grid-template-rows: 300px;
+            grid-template-columns: 30% 30% 30%;
+            box-sizing: border-box;
+            margin: 0 10px
+        }
+
+        #showcheckout div {
+            margin: 50px auto;
+            width: 80px;
+        }
+
+        .grid-item {
+            border: solid 5px #000;
+            box-sizing: border-box;
+            height: 100%;
+        }
+
+        .product-toggle {
+            margin: 0px auto;
+            padding: 0px;
+            width: 60%;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <h1>Product CRUD</h1>
+    <div id="order-link"><a href="/orders">Orders here</a></div>
+    <div id="grid-container"></div>
+
+    <div id="showcheckout">
+        <div>
+            <button type="button" id="viewcart-button" onclick="displayCheckoutItem()">View Cart</button>
+        </div>
+    </div>
+
+    <table id="checkout-table">
+        
+    </table>
+    <script src="js/site.js" asp-append-version="true"></script>
+
+</body>
+</html>
