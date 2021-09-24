@@ -36,7 +36,7 @@ namespace asdfasdf.Tests
             var result = await controller.GetProduct("1234");
 
             // Assert
-            Assert.IsInstanceOfType(result.Result, NotFoundResult, "object is not of correct type");
+            Assert.IsInstanceOfType(result.Result, typeof(NotFoundResult), "object is not of correct type");
         }
 
     }
