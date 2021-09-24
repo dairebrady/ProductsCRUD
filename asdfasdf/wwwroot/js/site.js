@@ -2,23 +2,51 @@
 const ordersEndpoint = 'api/orders';
 const orderItemsEndpoint = 'api/orderitems';
 
-function getItems() {
+function getProducts() {
     fetch(productsEndpoint)
         .then(response => response.json())
         .then(data => { displayItems(data); console.log(data); })
         .catch(error => console.error('Unable to get items.', error));
 }
-getItems();
+getProducts();
 
 
-async function getItem(itemId) {
-    let getProduct = productsEndpoint + '/' + itemId;
+async function getProduct(itemId) {
+    const getProduct = productsEndpoint + '/' + itemId;
     try {
         let response = await fetch(getProduct);
         const data = await response.json();
         return data;
     } catch (error) {
         console.error('Unable to get item ' + itemId);
+    }
+}
+
+async function updateProduct(item, quantity) {
+    const updateProduct = productsEndpoint + '/' + item.productID;
+    let requestBody = {
+        ProductID: item.productID,
+        Name: item.name,
+        Quantity: quantity,
+        Price: item.price,
+        image: item.image
+    }
+    console.log("requestBody: " + JSON.stringify(requestBody));
+    try {
+        let response = await fetch(updateProduct, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        });
+        console.log("TEST");
+        let data = await response.json();
+    } catch {
+        console.error("Failed to update product quantity");
+    } finally {
+
     }
 }
 
@@ -81,8 +109,10 @@ async function addOrderItemsInner(body) {
             },
             body: JSON.stringify(body)
         });
+        console.log("BODY: " + body.ProductID);
         let data = await response.json()
         console.log(`Added order item for ${data.orderID}, product: ${data.productID} and quantity: ${data.quantity}`);
+        updateProductInventoryCount(body);
     } catch {
         console.error("Failed to add order item");
     } finally {
@@ -93,7 +123,18 @@ async function addOrderItemsInner(body) {
 }
 
 function updateProductInventoryCount(body) {
-    let newQuantity = await getItem(body.productID);
+    console.log("IN updateProductInventoryCount and body is " + body.ProductID);
+    let product = getProduct(body.ProductID);
+    let quantityPurchased = body.Quantity;
+
+    product
+        .then((data) => {
+            newQuantity = data.quantity - quantityPurchased;
+            console.log("DQ: " + data.quantity);
+            console.log("QP: " + quantityPurchased);
+            console.log("NQ: " + newQuantity);
+            updateProduct(data, newQuantity);
+        });
 }
 
 async function fullCreateOrder(products) {
@@ -145,7 +186,7 @@ function displayCheckoutItem() {
     Array.from(itemCounts).forEach(item => {
         if (item.value > 0) {
             productId = item.id.split('-')[0];
-            product = getItem(productId);
+            product = getProduct(productId);
             products.push(product);
         }
     });

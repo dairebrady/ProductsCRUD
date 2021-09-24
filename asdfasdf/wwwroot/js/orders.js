@@ -40,15 +40,6 @@ async function getOrder(orderId) {
     }
 }
 
-/* May not need this function */
-async function getOrderItem(orderItemId) {
-    let data;
-    try {
-        let response = await fetch(orderItemsEndpoint + `/${orderItemId}`);
-        data = await response.json();
-    } catch { console.error('Could not retrieve order item') }
-}
-
 async function searchOrders(orderId) {
     let data;
     try {
