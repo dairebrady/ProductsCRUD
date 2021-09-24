@@ -173,7 +173,7 @@ function displayProducts(data) {
         productItem.className = 'grid-item';
 
         let imageContainer = document.createElement('img');
-        imageContainer.src = "https://www.nomadfoods.com/wp-content/uploads/2018/08/placeholder-1-e1533569576673-960x960.png";
+        imageContainer.src = item.image;
         console.log(item.Image);
 
         let productDetails = document.createElement('div');

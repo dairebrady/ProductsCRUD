@@ -53,7 +53,9 @@ async function deleteOrder(orderId) {
     console.log("Deleting order...");
     let data;
     try {
-        let response = await fetch
+        let response = await fetch(ordersEndpoint, {
+            method: 'DELETE'
+        })
     } catch {
         console.error("failed to delete");
     }
@@ -78,13 +80,32 @@ async function searchOrderItems(orderId) {
 }
 
 // deleting an order item from order
-async function deleteOrderItem(orderId) {
+async function deleteOrderItemOuter(orderId) {
     let data;
     try {
         console.log("Deleting order items...");
-        searchOrderItems(orderId);
+        let itemsToDelete = searchOrderItems(orderId);
+        itemsToDelete.forEach((item) => {
+            console.log(`Deleting order item ${item.orderItemID}`)
+            deleteOrderItemInner(item);
+        })
+        deleteOrder(orderId);
+        alert(`Order ${orderId} has been deleted!`);
     } catch {
         console.error("failed to delete");
+    } finally {
+        
+    }
+}
+
+async function deleteOrderItemInner(orderItem) {
+    try {
+        console.log("In deleteOderItemInner for " + orderItem.orderID);
+        let response = await fetch(orderItemsEndpoint + `/${item.orderItemID}`, {
+            method: 'DELETE'
+        })
+    } catch {
+        console.error('failed to delete order item ' + orderItem.productID + 'from order ' + orderItem.orderID);
     }
 }
 
@@ -98,20 +119,21 @@ function renderOrdersDropdown(data) {
         dropdownOption = document.createElement('option');
         dropdownOption.id = `${item.orderID}-option`;
         dropdownOption.value = item.orderID;
-        dropdownOption.innerText = 'Option ' + item.orderID;
+        dropdownOption.innerText = 'Order ' + item.orderID;
         dropdownMenu.appendChild(dropdownOption);
     })
 }
 
 //Order view */
 function displayOrderTableInfo(data) {
-    const orderInfo = document.createElement('div');
+    let orderInfo = document.createElement('div');
     orderInfo.id = 'order-info-inner';
+    orderInfo.innerHTML = '';
     orderInfo.innerHTML = (`
         <h1>ORDER DATA</h1>
         <h2>Order ID: ${data.orderID}</h2>
         <p><b>Date of order: </b>${data.date}</p>
-        <button type="button" id="button-deleteorder" onclick="deleteOrder(${data.orderID})">Delete order?</button>
+        <button type="button" id="button-deleteorder" onclick="deleteOrderItemOuter(${data.orderID})">Delete order?</button>
     `);
     document.getElementById('order-info-container')
         .appendChild(orderInfo);

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Orders CRUD</title>
+    <title>Orders</title>
     <style>
         *, body {
             box-sizing: border-box;
@@ -31,7 +31,7 @@
     </style>
 </head>
 <body>
-    <h1>Orders CRUD</h1>
+    <h1>Orders</h1>
     <div id="product-link"><a href="../">Products here</a></div>
     <form action="../api/orderitems/searchorders?orderId=">
         <label for="order-search">Select an order</label>
@@ -43,7 +43,6 @@
     <div id="order-items-table-container">
         <div id="order-items-table-inner"></div>
     </div>
-    <button type="button" id="button-deleteorder" onclick="deleteOrder">Delete order?</button>
     <script src="../js/orders.js" asp-append-version="true"></script>
 </body>
 </html>
