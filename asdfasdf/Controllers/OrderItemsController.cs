@@ -43,7 +43,7 @@ namespace asdfasdf.Controllers
         }
 
         // Search given specific OrderID api/OrderItems?orderId=5
-        [HttpGet("SearchOrders")]
+        [HttpGet("SearchOrderItems")]
         public async Task<List<OrderItem>> SearchOrderItems(int orderId)
         {
             return await DataAccess.DataAccess.SearchOrders(orderId, _context);

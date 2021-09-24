@@ -2,15 +2,21 @@
 const ordersEndpoint = 'api/orders';
 const orderItemsEndpoint = 'api/orderitems';
 
+/* FUNCTIONS CALLING ENDPOINTS IN CONTROLLERS DIRECTORY */
+
+/**************** ProductsController APIs ***************/
+// get all products */
+
 function getProducts() {
     fetch(productsEndpoint)
         .then(response => response.json())
-        .then(data => { displayItems(data); console.log(data); })
+        .then(data => { displayProducts(data); console.log(data); })
         .catch(error => console.error('Unable to get items.', error));
 }
 getProducts();
 
-
+// get a product
+/* */
 async function getProduct(itemId) {
     const getProduct = productsEndpoint + '/' + itemId;
     try {
@@ -22,6 +28,8 @@ async function getProduct(itemId) {
     }
 }
 
+// update a product
+/* */
 async function updateProduct(item, quantity) {
     const updateProduct = productsEndpoint + '/' + item.productID;
     let requestBody = {
@@ -41,22 +49,25 @@ async function updateProduct(item, quantity) {
             },
             body: JSON.stringify(requestBody)
         });
-        console.log("TEST");
-        let data = await response.json();
+        console.log("TEST2");
+        //let data = await response.json();
+        console.log("Data in updateProduct: " + data);
     } catch {
         console.error("Failed to update product quantity");
-    } finally {
-
     }
 }
 
+/**************** OrdersController APIs ***************/
+// add an order
+/* */
 async function addOrder() {
+    let data;
     const curDate = new Date();
     const requestBody = {
         Date: curDate.getFullYear() + '-' + (curDate.getMonth() + 1).toString().padStart(2, '0') + '-' + curDate.getDate()
     }
-    console.log("requestBody: " + requestBody.Date);
-    console.log("JSON'd body :" + JSON.stringify(requestBody));
+    console.log("requestBody_addOrder: " + requestBody.Date);
+    console.log("JSON'd body_addOrder :" + JSON.stringify(requestBody));
 
     try {
         let response = await fetch(ordersEndpoint, {
@@ -67,14 +78,23 @@ async function addOrder() {
             },
             body: JSON.stringify(requestBody)
         });
-        const data = await response.json();
+        data = await response.json();
         console.log(`Order stored in system with ID ${data.orderID} on date ${data.date}\n Response: ${data}`);
-        addOrderItems(data.orderID);
+
     } catch (error) {
-        console.log('Unable to add order');
+        console.log('Unable to add order in addOrder() function');
+    } finally {
+        addOrderItems(data.orderID);
+        alert(`New order added! OrderID: ${data.orderID}`);
     }
 }
 
+
+/**************** OrderItemsController APIs ***************/
+
+// add order item to an order step 1
+// creates an array of items to add to an order */
+/* */
 function addOrderItems(orderId) {
     let quantities = document.getElementsByClassName('product-quantity');
     let quantity;
@@ -95,9 +115,13 @@ function addOrderItems(orderId) {
     requestBodies.forEach(body => {
         addOrderItemsInner(body);
     });
-    alert(`New order added! OrderID: ${body.OrderID}`);
+    //alert(`New order added! OrderID: ${body.OrderID}`);*
 }
 
+// add order item to an order step 2
+// calls API to add each item from the
+// array created in step 1 to the order
+/* */
 async function addOrderItemsInner(body) {
     try {
         console.log("attempting to add order");
@@ -137,15 +161,10 @@ function updateProductInventoryCount(body) {
         });
 }
 
-async function fullCreateOrder(products) {
-    console.log("Creating full order...");
-    const orderId = await addOrder();
-    products.forEach(product => {
-        addOrderItem(product, orderId);
-    })
-}
-
-function displayItems(data) {
+/***************** RENDER HTML ELEMENTS ******************/
+// displays all products in a grid layout
+// each grid cell has product image, name, price and quantity
+function displayProducts(data) {
     const gridContainer = document.getElementById("grid-container")
     gridContainer.innerHTML = '';
 
@@ -172,12 +191,13 @@ function displayItems(data) {
     });
 }
 
+// renders table and table headers of selected products
+// gets all selected products and adds them to array
 function displayCheckoutItem() {
     const checkoutTable = document.getElementById('checkout-table');
     checkoutTable.innerHTML = "<tr><th>Product</th><th>Quantity</th><th>Total price</th></tr >";
     let selectedItems = [];
     let selectedItem = [];
-    let insertOrderQuery;
     let products = [];
     let product = {};
     let productId;
@@ -203,8 +223,9 @@ function displayCheckoutItem() {
     renderCheckoutButton();
 }
 
+// takes array of selected products from displayCheckoutItem
+// and adds them as table rows to checkout table
 function renderCheckoutTable(product) {
-    
     const checkoutTable = document.getElementById('checkout-table');
     console.log("Creating checkout table...");
 
@@ -230,6 +251,8 @@ function renderCheckoutTable(product) {
 
 }
 
+// displays checkout button under checkout table
+// this function is called within the displayCheckoutItem() function*/
 function renderCheckoutButton() {
     const checkoutButton = document.createElement('div');
     checkoutButton.innerHTML = `<button type="button" id="checkout-button" onclick="addOrder()">Checkout</button>`;
@@ -237,13 +260,8 @@ function renderCheckoutButton() {
 }
 
 
-
-function insertOrderQuery(totalPrice) {
-    let curDate = new Date();
-    return `insert into Orders values (${curDate.getFullYear()}-${curDate.getMonth()}-${curDate.getDate()}, ${totalPrice}`
-}
-
-
+/***************** TOGGLE PRODUCT QUANTITIES ******************/
+// add *
 function addCount(productInputBox, itemQuantity) {
     let productCount = document.getElementById(productInputBox).value;
     if (productCount == itemQuantity) {
@@ -255,6 +273,8 @@ function addCount(productInputBox, itemQuantity) {
                                                                                
 }
 
+// subtract
+/* */
 function subtractCount(productInputBox) {
     let productCount = document.getElementById(productInputBox).value;
     console.log(productCount);

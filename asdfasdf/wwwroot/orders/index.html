@@ -36,15 +36,14 @@
     <form action="../api/orderitems/searchorders?orderId=">
         <label for="order-search">Select an order</label>
         <select name="orderId" id="orders-search">
-            <option value="test">test</option>
         </select>
         <button type="button" id="button-getOrder">Submit</button>
-        <!--<button type="button" onclick="getOrder">Submit</button>-->
     </form>
     <div id="order-info-container"></div>
     <div id="order-items-table-container">
         <div id="order-items-table-inner"></div>
     </div>
+    <button type="button" id="button-deleteorder" onclick="deleteOrder">Delete order?</button>
     <script src="../js/orders.js" asp-append-version="true"></script>
 </body>
 </html>

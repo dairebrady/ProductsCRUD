@@ -1,8 +1,12 @@
 ﻿const productsEndpoint = '../api/products';
 const ordersEndpoint = '../api/orders';
 const orderItemsEndpoint = '../api/orderitems';
-const searchItemsEndpoint = '../api/orderitems/searchorders?orderId=';
+const searchItemsEndpoint = '../api/orderitems/searchOrders?orderId=';
 
+/* FUNCTIONS CALLING ENDPOINTS IN CONTROLLERS DIRECTORY */
+
+/**************** ProductsController APIs ***************/
+// get a product */
 async function getProduct(itemId) {
     let getProduct = productsEndpoint + '/' + itemId;
     try {
@@ -14,6 +18,8 @@ async function getProduct(itemId) {
     }
 }
 
+/**************** OrdersController APIs *****************/
+// get all orders */
 async function getOrders() {
     try {
         let response = await fetch(ordersEndpoint);
@@ -23,7 +29,9 @@ async function getOrders() {
         console.error("Unable to fetch order history");
     }
 }
+getOrders();
 
+// get an orders */
 async function getOrder(orderId) {
     console.log("getOrderEndpoint: " + ordersEndpoint + `/${orderId}`);
     let data;
@@ -36,11 +44,24 @@ async function getOrder(orderId) {
         console.error("Could not retrieve order");
     } finally {
         displayOrderTableInfo(data);
-        searchOrders(data.orderID);
+        searchOrderItems(data.orderID);
     }
 }
 
-async function searchOrders(orderId) {
+// delete an order */
+async function deleteOrder(orderId) {
+    console.log("Deleting order...");
+    let data;
+    try {
+        let response = await fetch
+    } catch {
+        console.error("failed to delete");
+    }
+}
+
+/************** OrderItemsController APIs ****************/
+// search an order item with OrderID */
+async function searchOrderItems(orderId) {
     let data;
     try {
         console.log("Search items endpoint: " + searchItemsEndpoint + orderId);
@@ -56,6 +77,19 @@ async function searchOrders(orderId) {
     }
 }
 
+// deleting an order item from order
+async function deleteOrderItem(orderId) {
+    let data;
+    try {
+        console.log("Deleting order items...");
+        searchOrderItems(orderId);
+    } catch {
+        console.error("failed to delete");
+    }
+}
+
+/***************** RENDER HTML ELEMENTS ******************/
+// OrderIDs dropdown */
 function renderOrdersDropdown(data) {
     console.log("Adding dropdown options...");
     let dropdownOption;
@@ -69,6 +103,7 @@ function renderOrdersDropdown(data) {
     })
 }
 
+//Order view */
 function displayOrderTableInfo(data) {
     const orderInfo = document.createElement('div');
     orderInfo.id = 'order-info-inner';
@@ -76,11 +111,13 @@ function displayOrderTableInfo(data) {
         <h1>ORDER DATA</h1>
         <h2>Order ID: ${data.orderID}</h2>
         <p><b>Date of order: </b>${data.date}</p>
+        <button type="button" id="button-deleteorder" onclick="deleteOrder(${data.orderID})">Delete order?</button>
     `);
     document.getElementById('order-info-container')
         .appendChild(orderInfo);
 }
 
+//Table listing order items */
 function displayOrderItemsTable(data) {
     const orderItemsTableInner = document.getElementById('order-items-table-inner');
     let product;
@@ -90,7 +127,7 @@ function displayOrderItemsTable(data) {
     let productCost;
     let orderItemRow;
     let totalCost = 0;
-    console.log("in displayOrderItemsTable: " + data[0].quantity);
+    console.log("in displayOrderItemsTable, item: " + data[0].quantity);
 
     orderItemsTableInner.innerHTML = '';
     let orderItemsTable = document.createElement('table');
@@ -113,7 +150,7 @@ function displayOrderItemsTable(data) {
                 orderItemRow.innerHTML = (`
                     <tr>
                         <td>${productName}</td>
-                        <td>${data.quantity}</td>
+                        <td>${item.quantity}</td>
                         <td>${productCost}</td>
                     </tr>
                 `);
@@ -129,6 +166,3 @@ document.getElementById('button-getOrder')
         getOrder(selectedOrder);
     });
 
-getOrders();
-
-console.log("Hello");
